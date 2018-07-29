@@ -1,0 +1,39 @@
+{
+  "name": "chaitanya-sangha",
+  "version": "1.0.0",
+  "description": "Sri Chaitanya Shiksha O Sangskriti Sangha, University of Dhaka",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scsoss/scsoss.github.io.git"
+  },
+  "keywords": [
+    "account",
+    "js",
+    "bulma"
+  ],
+  "author": "Pranta Saha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scsoss/scsoss.github.io/issues"
+  },
+  "homepage": "https://github.com/scsoss/scsoss.github.io#readme",
+  "dependencies": {
+    "bulma-extensions": "^1.0.31",
+    "connect-flash": "^0.1.1",
+    "cookie-session": "^2.0.0-beta.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "express-sanitizer": "^1.0.3",
+    "express-session": "^1.15.6",
+    "method-override": "^2.3.10",
+    "moment": "^2.21.0",
+    "mongoose": "5.2.4",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.0"
+  }
+}

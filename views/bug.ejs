@@ -1,0 +1,36 @@
+<% include partials/header %>
+ <div class="container">
+     
+    <div class="columns is-mobile" id="main">
+                   
+    <span class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span></span>
+<div class="column">
+     <% for (let [p, t] of bug.entries()){%>
+        <p class="event-item">
+                <span><%= p+1 %></span>
+                <span class="icon-item-type"><i class="fa fa-bug"></i></span>
+                <a href="#">by: <%= t.name %></a> |
+                 Problem: 
+                <small><%= t.desc %></small>
+                <span class="tag is-warning"><%= t.user %></span>
+                <span class="delete button is-danger bugDel" aria-label="delete" data-id="<%= t._id %>"></span>
+        </p>   
+    <% } %>
+</div>
+</div>
+ </div>
+<style>
+    .event-item{
+        background: #fff5f5;
+        padding: 10px;
+        margin-top:2px;
+        margin-bottom:5px; 
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .bugDel{
+        float: right;
+    }
+
+</style>
+<% include partials/footer %>

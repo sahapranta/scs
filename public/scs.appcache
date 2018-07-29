@@ -1,0 +1,22 @@
+CACHE MANIFEST
+#2018-10-10
+
+CACHE:
+manifest.json
+sw.js
+serviceworker-cache-polyfill.js
+css/bulma.css
+css/index.css
+js/main.js
+media/404.png
+media/background.jpg
+media/kirtan.mp3
+media/logo.png
+media/icons/icon-72x72.png
+
+
+# Resources that require the user to be online.
+NETWORK:
+*
+FALLBACK:
+#STATIC.html

@@ -1,0 +1,174 @@
+<% include ../partials/header %>
+
+    <div class="container">
+        <div id="main">
+                <section class="hero is-info welcome is-small">
+                        <div class="hero-body">
+                            <div class="container">
+                                <span class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> ভক্তদের তালিকা</span>
+                                <a class="button is-danger is-hovered open-modal" data-modal-id="#my-modal" id="addCost">
+                                <span>নতুন ভক্ত</span>
+                                <span class="icon is-small">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+            
+
+        <div class="card events-card">
+            <div class="card-table">
+                <div class="content">
+                    <table class="table is-striped is-hoverable is-responsive" id="devTabLoad">
+                        <tbody>
+                            <tr>
+                                <td>নং</td>
+                                <td>নাম</td>
+                                <td>মোবাইল</td>
+                                <td>Edit</td>
+                            </tr>
+                       
+                    <% for(let d in devotee){%>
+                            <tr>
+                                <td><%= parseInt(d)+1 %></td>
+                                <td><a href="/devotee/<%=devotee[d]._id %>"><%= devotee[d].name %></a></td>
+                                <td><span><%= devotee[d].mobile %></span></td>
+                                <td>
+                                    <div class="field is-grouped">
+                                        <div class="control">
+                                            <button class="button is-success is-small devEdit" data-modal-id="#edit-modal" data-id="<%= devotee[d]._id %>">
+                                                <span class="icon">
+                                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div class="control">
+                                            <button class="button is-danger is-small devDelete" data-id="<%= devotee[d]._id %>">
+                                                <span class="icon">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                    <% } %>
+                        </tbody>
+                    </table>
+                </div>      
+            </div>
+        </div>
+    
+    </div>
+</div>
+
+<div aria-hidden="" class="modal is-mobile" id="my-modal">
+        <div class="modal-background close-modal" data-modal-id="#my-modal"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">নতুন ভক্ত যোগ করুন</p>
+              <button aria-label="close" class="delete close-modal" data-modal-id="#my-modal"></button>
+            </header>
+            <section class="modal-card-body">
+              
+<form action="/addDevotee" method="POST">
+
+<div class="field">
+        <div class="control has-icons-left">
+          <span class="icon is-small is-left">
+              <i class="fa fa-users" aria-hidden="true"></i>
+          </span>
+          <input class="input" type="text" placeholder="ভক্তের নাম" name="name">
+      </div>
+</div>
+<div class="field">
+      <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+            </span>
+            <input class="input" type="text" placeholder="মোবাইল নম্বর" name="mobile">
+        </div>
+</div>
+
+
+<div class="field is-grouped is-grouped-centered">
+  <div class="control">
+      <button class="button is-success" type="submit">
+          <span class="icon is-small">
+          <i class="fa fa-check"></i>
+          </span>
+          <span>Save</span>
+      </button>
+  </div>
+  <div class="control">
+      <button class="button is-danger is-outlined" type="reset">
+          <span>Reset</span>
+          <span class="icon is-small">
+          <i class="fa fa-times"></i>
+          </span>
+      </button>
+  </div>
+</div>
+
+
+</form>
+            </section>
+            <!-- <footer class="modal-card-foot">
+            </footer> -->
+          </div>
+      </div>
+
+ <!-- another modal for devotee edit/put request -->
+
+<div aria-hidden="" class="modal is-mobile" id="edit-modal">
+    <div class="modal-background close-modal" data-modal-id="#edit-modal"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Edit</p>
+            <button aria-label="close" class="delete close-modal" data-modal-id="#edit-modal"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="POST" id="editForm">          
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                        </span>
+                        <input class="input edit-name" type="text" placeholder="ভক্তের নাম" name="editName">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                        </span>
+                        <input class="input edit-num" type="text" placeholder="মোবাইল নম্বর" name="editMobile">
+                    </div>
+                </div>
+            <!-- </form> -->
+                <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                        <button class="button is-success" id="devEditing">
+                            <span class="icon is-small">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            <span>Save</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-danger is-outlined" type="reset">
+                            <span>Reset</span>
+                            <span class="icon is-small">
+                                <i class="fa fa-times"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+   <!-- <footer class="modal-card-foot">
+        </footer> -->
+    </div>
+</div>
+<% include ../partials/footer %>

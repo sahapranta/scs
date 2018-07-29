@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SCSOSS, DU</title>
+  <link rel="shortcut icon" href="/media/favicon.ico" type="image/x-icon"/>
+
+  <link rel="icon" type="image/png" sizes="66x41" href="/media/logo1.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="66x41" href="/media/logo1.png">
+  <meta content='#8a10af' name='theme-color'/>
+  <meta name="copyright" content="scsoss_du">
+  <meta name="author" content="scsoss_du">
+  <meta content='Bangladesh' name='geo.placename'/>
+  <meta content='880' name='geo.country'/>
+  <link rel="manifest" href="manifest.json">
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="scsoss_du">
+  <meta name="apple-mobile-web-app-title" content="scsoss_du">
+  <meta name="msapplication-navbutton-color" content="#8a10af">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="msapplication-starturl" content="/">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <!-- Bulma Version 0.6.0 -->
+  <link rel="stylesheet" href="/css/bulma.css" type="text/css"/>
+  <link rel="stylesheet" href="/css/index.css" type="text/css"/>
+</head>
+<body class="has-navbar-fixed-top">
+    <nav class="navbar is-fixed-top">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="../">
+            <img class="nav-logo" src="/media/logo.png" alt="Logo">
+          </a>
+          <span class="navbar-burger burger" data-target="navbarMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+          <div class="navbar-end">
+            <a class="navbar-item is-active" href="/">
+              Home
+            </a>
+            
+            <% if (!user){ %>
+            <a class="navbar-item" href="/Prabhupada">
+              Prabhupada
+            </a>
+            <a class="navbar-item" href="/info">
+              Information
+            </a>
+            <a class="navbar-item" href="/login">
+              login
+            </a>
+            <% }else { %>
+              <div class="navbar-item">
+                <div class="field is-grouped">
+                    <p class="control">
+                        <a class="button is-white" href="#">
+                            <span class="icon"><i class="fa fa-bug"></i></span>
+                            <span class="open-modal" data-modal-id="#bug-report"> Report bug </span>
+                        </a>
+                    </p>
+                    <p class="control">
+                        <a class="button is-white" href="#">
+                            <span class="icon badge is-badge-danger" data-badge="3" id="notification"><i class="fa fa-bell"></i></span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+              <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link is-grouped" href="/profile">
+                    <figure class="image is-24x24 is-rounded">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png">
+                    </figure>
+                    <span> <%= user.username %></span>
+                 </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item is-leveled " href="# ">
+                        Messages
+                        <span class="icon "><i class="fa fa-comments "></i></span>
+                    </a>
+                    <a class="navbar-item is-leveled " href="/logout">
+                        Sign Out
+                        <span class="icon "><i class="fa fa-sign-out "></i></span>
+                    </a>
+                </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </nav>
+  <!-- </div> -->
+   <!--Connect Flash-->
+  <div class="container">
+    <% if (error && error.length>0){%>
+      <div class="notification is-danger">
+        <%= error %>
+      </div>
+    <% } %>
+    <% if(success && success.length>0){ %>
+      <div class="notification is-success">
+        <%= success %>
+      </div>
+    <% } %>  
+  </div> 
+
+  <% if (user){ %>
+<div class="sidenav" id='mySidenav'>
+      <aside class="menu ">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+          <p class="menu-label "> Menu </p>
+            <ul class="menu-list">
+              <li>
+                <a class="is-active" href="/admin">
+                  <span class="icon "><i class="fa fa-tachometer"></i></span>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="/meal">
+                  <span class="icon"><i class="fa fa-book"></i></span>
+                  মিল
+                </a>
+              </li>
+              <li>
+                <a href="/devotee">
+                  <span class="icon"><i class="fa fa-address-book"></i></span>
+                  ভক্তদের তালিকা
+                </a>
+              </li>
+              <li>
+                <a href="/monthlyCost">
+                  <span class="icon "><i class="fa fa-file-text-o"></i> </span>
+                  খরচ
+                </a>
+              </li>
+            </ul>
+          <p class="menu-label "> Administration </p>
+            <ul class="menu-list ">
+              <li>
+                <a href="/user">
+                  <span class="icon "><i class="fa fa-user-circle-o"></i></span>
+                  Users
+                </a>       
+              </li>      
+              <li>  
+                <a href="/settings">
+                  <span class="icon"><i class="fa fa-id-card"></i></span>
+                  Access rules  
+                </a>              
+              </li>
+              <li>
+                <a href="/analysis">
+                  <span class="icon "><i class="fa fa-lock"></i></span>
+                  Analysis
+                </a>
+              </li>   
+            </ul>    
+      </aside>
+    </div>
+  <% } %>
+

@@ -1,0 +1,86 @@
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <div class="columns is-mobile is-centered">
+                <div class="field">
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <a class="tag is-link" href="#">Developed By:</a>
+                            <span class="tag">@Pranta | @Asim &nbsp;<i class="fa fa-github"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- <script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous"></script> -->
+<script src="/js/jquery.js"></script>
+
+<script async type="text/javascript" src="/js/main.js"></script>
+
+<script type="text/javascript">
+    window.addEventListener("load",function(){
+        "serviceWorker"in navigator&&navigator.serviceWorker
+        .register("/sw.js",{scope:"./"})
+        .then(function(e){
+            console.log("Registration succeeded.")
+        })
+        .catch(function(e){
+            console.log("Registration failed with "+e)
+        })
+    });
+</script>
+    <!-- modal for report bug -->
+    <div aria-hidden="" class="modal is-mobile" id="bug-report">
+        <div class="modal-background close-modal"  data-modal-id="#bug-report"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+              <p class="modal-card-title">Report any problem!</p>
+              <button aria-label="close" class="delete close-modal" data-modal-id="#bug-report"></button>
+          </header>
+          <section class="modal-card-body">
+            <form action="/bug" method="POST">
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-bug" aria-hidden="true"></i>
+                        </span>
+                        <input class="input is-info" type="text" placeholder="Your Name" name="name">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                      <textarea class="textarea is-info" type="text" name="desc" placeholder="Please Give the problem details here"></textarea>
+                    </div>
+                </div>
+    
+                <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                        <button class="button is-success" type="submit">
+                            <span class="icon is-small">
+                            <i class="fa fa-check"></i>
+                            </span>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-danger is-outlined" type="reset">
+                            <span>Reset</span>
+                            <span class="icon is-small">
+                            <i class="fa fa-times"></i>
+                            </span>
+                        </button>
+                    </div>
+                  </div>
+            </form>
+          </section>
+        </div>
+    </div>
+</body>
+</html>
