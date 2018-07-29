@@ -1,227 +1,225 @@
 <% include partials/header %>
-  <div class="container load">
-    <div class="column is-12" id="main">
-      
-      <section class="hero is-info welcome is-small">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Hello, Admin. </h1>
-          </div>
+<div class="container load">
+  <div class="column is-12" id="main">
+    
+    <section class="hero is-info welcome is-small">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Hello, Admin. </h1>
         </div>
-      </section>
-<% let result = devotee.map(({name, meals, deposits}) => ({name, meals : meals.reduce((a,c) => a + c.num, 0), deposits : deposits.reduce((a,c) => a + c.amount, 0)})); %>
-<% var totalD= [], totalM = []; for(let f in result){totalD.push(result[f].deposits); totalM.push(result[f].meals)} function sum(num){return num.reduce((a,b)=>{return a+b;}, 0);} %>
+      </div>
+    </section>
+<% let result = devotee.map(({name, meals, deposits, costs}) => ({name, meals : meals.reduce((a,c) => a + c.num, 0), tCost : costs.reduce((a,c) => a + c.amount, 0), deposits : deposits.reduce((a,c) => a + c.amount, 0)})); %>
+<% var totalD= [], totalM = []; var tCosts=[]; for(let f in result){totalD.push(result[f].deposits); totalM.push(result[f].meals); tCosts.push(result[f].tCost);} function sum(num){return num.reduce((a,b)=>{return a+b;}, 0);} %>
 <% var enToBan={'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'}; String.prototype.getBnDigit = function() {var retStr = this;for (var x in enToBan) { retStr = retStr.replace(new RegExp(x, 'g'), enToBan[x]);} return retStr;}; %>
 
-      <section class="info-tiles">
-        <div class="tile is-ancestor has-text-centered">
-          
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title"><%= Number(Math.round(costs[0].value/sum(totalM))).toFixed(2).getBnDigit() %></p>
-              <p class="subtitle">Meal Rate</p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">৳<%= costs[0].value %></p>
-              <p class="subtitle">Total Cost</p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title"><%= sum(totalD) %></p>
-              <p class="subtitle">Total Income</p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title"><%= sum(totalD) - costs[0].value%></p>
-              <p class="subtitle">Balance</p>
-            </article>
-          </div>
-          
-        </div><!--end of div class="tile is-ancestor -->   
-      </section> <!--End of Section info tiles-->
-
-      <div class="columns is-desktop">
+    <section class="info-tiles">
+      <div class="tile is-ancestor has-text-centered">
         
-        <div class="column is-4">
-          <div class="card events-card">
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title"><%= Number(Math.round(sum(tCosts)/sum(totalM))).toFixed(2).getBnDigit() %></p>
+            <p class="subtitle">Meal Rate</p>
+          </article>
+        </div>
 
-            <header class="card-header">
-              <p class="card-header-title">
-                এ মাসের প্রণামী যারা এখনো দেয়নি                 
-              </p>
-              <a href="#" class="card-header-icon" aria-label="more options">
-                <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
-              </a>
-            </header>
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title">৳<%= sum(tCosts) %></p>
+            <p class="subtitle">Total Cost</p>
+          </article>
+        </div>
 
-            <div class="card-table">
-              <div class="content">
-                <table class="table is-fullwidth is-striped">
-                  <tbody class="has-text-centered">
-                    <% for(let d in devotee){if(devotee[d].deposits >= 0){%>
-                      <tr >
-                        <td width="5%"><i class="fa fa-times"></i></td>
-                        <td width="15%"><%= parseInt(d)+1 %></td>
-                        <td width="55%"><a href="/devotee/<%=devotee[d]._id %>"><%= devotee[d].name %></a></td>
-                        <td width="25%" ><button class="button is-small is-primary deposit-modal" data-id="<%= devotee[d]._id %>" data-modal-id="#deposit-modal">জমা</button></td>
-                      </tr>
-                    <% }} %>
-                  </tbody>
-                </table>
-              </div>
-            </div> <!--End of card table div-->           
-          </div> <!-- end of events card-->
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title"><%= sum(totalD) %></p>
+            <p class="subtitle">Total Income</p>
+          </article>
+        </div>
 
-          <div class="card events-card">
-            <header class="card-header">
-              <a href="#" class="card-header-icon" aria-label="more options">
-                <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
-              </a>
-            </header>
-
-            <div class="card-table">
-              <div class="content">
-                <table class="table is-fullwidth is-striped is-responsive is-folded" id="depoTab">
-                  <tbody class="has-text-centered">
-                    <% for(let d in devotee){%>
-                      <tr >
-                        <td width="5%"><i class="fa fa-check"></i></td>
-                        <td width="15%"><%= parseInt(d)+1 %></td>
-                        <td width="55%"><a href="/devotee/<%=devotee[d]._id %>"><%= devotee[d].name %></a></td>
-                        <td width="25%" ><button class="button is-small is-primary deposit-modal" data-id="<%= devotee[d]._id %>" data-modal-id="#deposit-modal">জমা</button></td>
-                      </tr>
-                    <% } %>
-                  </tbody>
-                </table>
-              </div>
-            </div> <!--End of card table div-->
-
-            <footer class="card-footer">
-              <span class="card-footer-item view-all button">View All</span>
-            </footer>
-            
-          </div> <!-- end of events card-->   
-
-        </div><!--End of Column -->
-            
-        <div class="column is-1"></div>
+        <div class="tile is-parent">
+          <article class="tile is-child box">
+            <p class="title"><%= sum(totalD) - sum(tCosts)%></p>
+            <p class="subtitle">Balance</p>
+          </article>
+        </div>
         
-        <div class="column is-7">
-          <div class="card" id="monthlyChart">
-            <header class="card-header">
-              <p class="card-header-title">
-                <%= month %> এর হিসাব
-              </p>
-              <a href="#" class="card-header-icon buttons" aria-label="more options">
-                <button class="button is-small is-primary" id="excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
-                <button class="button is-small is-link" id="print"><i class="fa fa-print" aria-hidden="true"></i></button>
-                <button class="button is-small is-danger" id="pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
-              </a>    
-            </header>
+      </div><!--end of div class="tile is-ancestor -->   
+    </section> <!--End of Section info tiles-->
 
-            <div class="card-content">
-              <table class="table is-fullwidth is-responsive is-striped is-hoverable">
-                <tbody>
-                    <tr>
-                      <td>নং</td>
-                      <td>নাম</td>
-                      <td>মিল</td>
-                      <td>জমা</td>
-                      <td>খরচ</td>
-                      <td>হিসাব</td>
+    <div class="columns is-desktop">
+      
+      <div class="column is-4">
+        <div class="card events-card">
+
+          <header class="card-header">
+            <p class="card-header-title">
+              এ মাসের প্রণামী যারা এখনো দেয়নি                 
+            </p>
+            <a href="#" class="card-header-icon" aria-label="more options">
+              <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+            </a>
+          </header>
+
+          <div class="card-table">
+            <div class="content">
+              <table class="table is-fullwidth is-striped">
+                <tbody class="has-text-centered">
+                  <% for(let d in devotee){if(devotee[d].deposits >= 0){%>
+                    <tr >
+                      <td width="5%"><i class="fa fa-times"></i></td>
+                      <td width="15%"><%= parseInt(d)+1 %></td>
+                      <td width="55%"><a href="/devotee/<%=devotee[d]._id %>"><%= devotee[d].name %></a></td>
+                      <td width="25%" ><button class="button is-small is-primary deposit-modal" data-id="<%= devotee[d]._id %>" data-modal-id="#deposit-modal">জমা</button></td>
                     </tr>
-                   <% for(let x in result){ %>
-                    <% let mark='red'; for(q in devotee[x].costs){ if(devotee[x].costs[q].market === 'কাওরান বাজার' ){ mark='white';}}%>
-                    <tr class="<%= mark %>">
-                      <td><%= parseInt(x)+1 %></td>
-                      <td><a href="/devotee/<%=devotee[x]._id %>"><%= result[x].name %></a></td>
-                      <td><span class="tag is-success"><%= result[x].meals %></span></td>
-                      <td>৳<%= result[x].deposits %></td>
-                      <% let thCost =Math.floor(result[x].meals*sum(totalM)); %>
-                      <td><%= thCost %></td>
-                      <td><%= thCost - result[x].deposits %></td>
+                  <% }} %>
+                </tbody>
+              </table>
+            </div>
+          </div> <!--End of card table div-->           
+        </div> <!-- end of events card-->
+
+        <div class="card events-card">
+          <header class="card-header">
+            <a href="#" class="card-header-icon" aria-label="more options">
+              <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+            </a>
+          </header>
+
+          <div class="card-table">
+            <div class="content">
+              <table class="table is-fullwidth is-striped is-responsive is-folded" id="depoTab">
+                <tbody class="has-text-centered">
+                  <% for(let d in devotee){%>
+                    <tr >
+                      <td width="5%"><i class="fa fa-check"></i></td>
+                      <td width="15%"><%= parseInt(d)+1 %></td>
+                      <td width="55%"><a href="/devotee/<%=devotee[d]._id %>"><%= devotee[d].name %></a></td>
+                      <td width="25%" ><button class="button is-small is-primary deposit-modal" data-id="<%= devotee[d]._id %>" data-modal-id="#deposit-modal">জমা</button></td>
                     </tr>
                   <% } %>
-                <!-- </tbody>
-                    <tfoot> -->
-                        <tr>
-                            <td></td>
-                            <td>Total</td>
-                            <td><span class="tag is-success"><%= sum(totalM) %></span></td>
-                            <td >৳<%= sum(totalD) %></td>
-                            <td></td>
-                            <td  class="has-text-right"></td>
-                        </tr>
-                      </tbody>   
-              </table>     
-            </div> <!--Card content -->
-                    
-          </div> <!--End of card-->       
-        </div> <!--End of column is-5 of month table-->          
-      </div> <!--End of column-->
-    
-    </div><!--End of id main-->
-  </div><!--End of container div-->
+                </tbody>
+              </table>
+            </div>
+          </div> <!--End of card table div-->
 
+          <footer class="card-footer">
+            <span class="card-footer-item view-all button">View All</span>
+          </footer>
+          
+        </div> <!-- end of events card-->   
 
-  <div aria-hidden="" class="modal is-mobile" id="deposit-modal">
-      <div class="modal-background close-modal" data-modal-id="#deposit-modal"></div>
-      <div class="modal-card">
-          <header class="modal-card-head">
-              <p class="modal-card-title">Deposit for: <span class="deposit-name"></span></p>
-              <button aria-label="close" class="delete close-modal" data-modal-id="#deposit-modal"></button>
+      </div><!--End of Column -->
+          
+      <div class="column is-1"></div>
+      
+      <div class="column is-7">
+        <div class="card" id="monthlyChart">
+          <header class="card-header">
+            <p class="card-header-title">
+              <%= month %> এর হিসাব
+            </p>
+            <a href="#" class="card-header-icon buttons" aria-label="more options">
+              <button class="button is-small is-primary" id="excel"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button>
+              <button class="button is-small is-link" id="print"><i class="fa fa-print" aria-hidden="true"></i></button>
+              <button class="button is-small is-danger" id="pdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
+            </a>    
           </header>
-          <section class="modal-card-body">
-              <form class="box is-mobile" method="POST" id="depositForm">          
-                  <div class="field">
-                      <div class="control has-icons-left">
-                          <span class="icon is-small is-left">
-                              <i class="fa" aria-hidden="true">৳</i>
-                          </span>
-                          <input class="input" type="text" placeholder="টাকার পরিমাণ" name="depositAmount">
-                      </div>
-                  </div>
-                  <div class="field">
-                      <div class="control has-icons-left">
-                          <span class="icon is-small is-left">
-                              <i class="fa fa-phone" aria-hidden="true"></i>
-                          </span>
-                          <input class="input default-date" type="date" name="depositDate">
-                      </div>
-                  </div>
-              <!-- </form> -->
-                  <div class="field is-grouped is-grouped-centered">
-                      <div class="control">
-                          <button class="button is-success" id="depositSend">
-                              <span class="icon is-small">
-                                  <i class="fa fa-check"></i>
-                              </span>
-                              <span>Save</span>
-                          </button>
-                      </div>
-                      <div class="control">
-                          <button class="button is-danger is-outlined" type="reset">
-                              <span>Reset</span>
-                              <span class="icon is-small">
-                                  <i class="fa fa-times"></i>
-                              </span>
-                          </button>
-                      </div>
-                  </div>
-              </form>
-          </section>
-     <!-- <footer class="modal-card-foot">
-          </footer> -->
-      </div>
-  </div>
 
+          <div class="card-content">
+            <table class="table is-fullwidth is-responsive is-striped is-hoverable">
+              <tbody>
+                  <tr>
+                    <td>নং</td>
+                    <td>নাম</td>
+                    <td>মিল</td>
+                    <td>জমা</td>
+                    <td>খরচ</td>
+                    <td>হিসাব</td>
+                  </tr>
+                 <% for(let x in result){ %>
+                  <% let mark='red'; for(q in devotee[x].costs){ if(devotee[x].costs[q].market === 'কাওরান বাজার' ){ mark='white';}}%>
+                  <tr class="<%= mark %>">
+                    <td><%= parseInt(x)+1 %></td>
+                    <td><a href="/devotee/<%=devotee[x]._id %>"><%= result[x].name %></a></td>
+                    <td><span class="tag is-success"><%= result[x].meals %></span></td>
+                    <td>৳<%= result[x].deposits %></td>
+                    <% let thCost =Math.floor(result[x].meals*sum(totalM)); %>
+                    <td><%= thCost %></td>
+                    <td><%= thCost - result[x].deposits %></td>
+                  </tr>
+                <% } %>
+              <!-- </tbody>
+                  <tfoot> -->
+                      <tr>
+                          <td></td>
+                          <td>Total</td>
+                          <td><span class="tag is-success"><%= sum(totalM) %></span></td>
+                          <td >৳<%= sum(totalD) %></td>
+                          <td></td>
+                          <td  class="has-text-right"></td>
+                      </tr>
+                    </tbody>   
+            </table>     
+          </div> <!--Card content -->
+                  
+        </div> <!--End of card-->       
+      </div> <!--End of column is-5 of month table-->          
+    </div> <!--End of column-->
   
+  </div><!--End of id main-->
+</div><!--End of container div-->
+
+
+<div aria-hidden="" class="modal is-mobile" id="deposit-modal">
+    <div class="modal-background close-modal" data-modal-id="#deposit-modal"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Deposit for: <span class="deposit-name"></span></p>
+            <button aria-label="close" class="delete close-modal" data-modal-id="#deposit-modal"></button>
+        </header>
+        <section class="modal-card-body">
+            <form class="box is-mobile" method="POST" id="depositForm">          
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <span class="icon is-small is-left">
+                            <i class="fa" aria-hidden="true">৳</i>
+                        </span>
+                        <input class="input" type="text" placeholder="টাকার পরিমাণ" name="depositAmount">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                        </span>
+                        <input class="input default-date" type="date" name="depositDate">
+                    </div>
+                </div>
+            <!-- </form> -->
+                <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                        <button class="button is-success" id="depositSend">
+                            <span class="icon is-small">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            <span>Save</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-danger is-outlined" type="reset">
+                            <span>Reset</span>
+                            <span class="icon is-small">
+                                <i class="fa fa-times"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+
 
 <% include partials/footer %>
