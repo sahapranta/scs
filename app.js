@@ -411,12 +411,18 @@ new Bug({
 });
 
 app.delete('/bug/delete/:id', adminPass, (req, res)=>{
-Bug.findByIdAndRemove(req.params.id, (err)=>{
-   if(err){console.log(err);}
-   req.flash('Bug Deleted');
-   res.redirect('back');
+    Bug.findByIdAndRemove(req.params.id, (err)=>{
+        if(err){console.log(err);}
+        req.flash('Bug Deleted');
+        res.redirect('back');
+    });
 });
+
+app.get('/analysis', authCheck, (req, res)=>{
+    res.render('analysis', {user:req.user});
 });
+
+
 
 app.get("/nodata", (req, res)=>{
 res.render("nodata");
