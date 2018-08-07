@@ -76,10 +76,10 @@
                 </div>
             </div>
               <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link is-grouped" href="/profile">
-                    <figure class="image is-24x24 is-rounded">
+                <a class="navbar-link is-grouped" href="/admin">
+                    <!-- <figure class="image is-24x24 is-rounded">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png">
-                    </figure>
+                    </figure> -->
                     <span> <%= user.username %></span>
                  </a>
                 <div class="navbar-dropdown">
@@ -115,12 +115,12 @@
 
   <% if (user){ %>
 <div class="sidenav" id='mySidenav'>
-      <aside class="menu ">
+      <aside class="menu">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-          <p class="menu-label "> Menu </p>
+          <p class="menu-label"> Menu </p>
             <ul class="menu-list">
               <li>
-                <a class="is-active" href="/admin">
+                <a href="/admin">
                   <span class="icon "><i class="fa fa-tachometer"></i></span>
                   Dashboard
                 </a>
@@ -144,7 +144,7 @@
                 </a>
               </li>
             </ul>
-          <p class="menu-label "> Administration </p>
+          <p class="menu-label is-active"> Administration </p>
             <ul class="menu-list ">
               <li>
                 <a href="/user">
@@ -154,16 +154,28 @@
               </li>      
               <li>  
                 <a href="/settings">
-                  <span class="icon"><i class="fa fa-id-card"></i></span>
-                  Access rules  
+                  <span class="icon"><i class="fa fa-cog"></i></span>
+                  Settings  
                 </a>              
               </li>
               <li>
                 <a href="/analysis">
-                  <span class="icon "><i class="fa fa-lock"></i></span>
+                  <span class="icon "><i class="fa fa-pie-chart"></i></span>
                   Analysis
                 </a>
-              </li>   
+              </li>
+              <li>
+                  <a href="/bugs">
+                    <span class="icon "><i class="fa fa-bug"></i></span>
+                    Bugs
+                  </a>
+              </li>
+              <li>
+                <a href="/report">
+                  <span class="icon "><i class="fa fa-bug"></i></span>
+                  Report
+                </a>
+            </li>     
             </ul>    
       </aside>
     </div>

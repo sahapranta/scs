@@ -28,7 +28,9 @@ $('document').ready(function(){
         // alert();
         dropdown.toggleClass('.is-open');
     });
-
+$('.menu-list li').on('hover', function(){
+    $('.menu-list li a').toggleClass('.is-active');
+});
    
     var localStorageAPI = {
         isSupported: function() {
@@ -243,13 +245,11 @@ $('document').ready(function(){
 //side Nav
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-  }
+}
 
-  function closeNav() {
+function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
-  }
+}
 
 //Notification
 window.setTimeout(function() {

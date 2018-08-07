@@ -50,6 +50,10 @@
   background:rgba(0, 0, 0, 0.1);
   bottom: 0;
 }
+.menu-label{
+  text-align: right;
+  background-color: #fff;
+}
 .sidenav {
   height: 100%;
   width: 0;
@@ -57,24 +61,38 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #111;
+  background-color: hsl(170, 92%, 46%);
   overflow-x: hidden;
   transition: 0.5s;
-  margin-top: 60px;
-  overflow: hidden;
+  padding-top: 60px;
 }
 
 .sidenav a {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
-  color: #818181;
+  font-size: 18px;
+  color: #777777;
   display: block;
   transition: 0.3s;
 }
 
 .sidenav a:hover {
-  color: #130909;
+  color: hsl(217, 71%, 53%);
 }
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 16px;}
+}
+
 #addCost{
   color:rgb(250, 245, 245);
   float:right;
@@ -89,24 +107,6 @@
   box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
   color: #fff;
   transform: translateY(-3px);
-}
-
-.sidenav .closebtn {
-  position: absolute;
-  top: -18px;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
-#main {
-  transition: margin-left .5s;
-  padding: 16px;
-}
-
-@media screen and (max-height: 450px) {
-.sidenav {padding-top: 15px;}
-.sidenav a {font-size: 18px;}
 }
 
 .is-open {
@@ -202,8 +202,6 @@ input:checked + .slider {
   background-color: #2196F3;
 }
 
-
-
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
@@ -216,4 +214,32 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.profile {
+  margin-top:-50px;
+  margin-left:10px;
+  color: #8b8585; 
+}
+.meal{
+    margin-left:-15px;
+}
+.profile-heading .name {
+  margin:-20px 0;
+  padding-top:50px;
+  padding-left: 20px;
+}
+.follow{
+    margin-top: 15px;
+}
+
+.stat-val {
+    font-size: 2em;
+    padding-top: 15px;
+    font-weight: bold;
+}
+      
+.stat-key {
+    font-size: 1.2em;
+    font-weight: 200;
 }

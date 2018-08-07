@@ -1,31 +1,19 @@
 <% include ../partials/header %>
-
+<% var meal=[], deposit=[]; for(let f of devotee.deposits){deposit.push(f.amount);} for(let x of devotee.meals){meal.push(x.num);} function sum(num){return num.reduce((a,b)=>{return a+b;}, 0);} %>
 <div class="container">
     <div id="main">
-        <h1 class="title" style="position:absolute; z-index:2;"><span style="cursor:pointer" onclick="openNav()">&#9776;</span></h1>
+        <h1 class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span><span><%= devotee.name %></span></h1>
         
         <div class="profile">
 
     <div class="section profile-heading">
       <div class="columns  is-mobile is-multiline">
-        <div class="column is-2-tablet is-4-mobile ">
-          <div class="image is-128x128 avatar">
-            <img src="https://placehold.it/256x256">
-          </div>
-        </div>
-        <div class="column is-4-tablet is-8-mobile name has-text-centered">
-          <p>
-            <span class="title is-bold"><%= devotee.name %></span></p>
-            <span class="button is-primary is-outlined follow">Follow</span>
-          <!-- </p> -->
-          <!-- <p class="tagline">The users profile bio would go here, of course. It could be two lines</p> -->
-        </div>
-        <div class='column is-2-tablet is-4-mobile meal has-text-centered'>
-            <p class='stat-val'>50</p>
+           <div class='column is-2-tablet is-4-mobile meal has-text-centered'>
+            <p class='stat-val'><%= sum(meal); %></p>
             <p class='stat-key'>Meal</p>
           </div>
           <div class='column is-2-tablet is-4-mobile has-text-centered'>
-            <p class='stat-val'>4000</p>
+            <p class='stat-val'><%= sum(deposit); %></p>
             <p class='stat-key'>Balance</p>
           </div>
           <div class='column is-2-tablet is-4-mobile has-text-centered'>
@@ -35,51 +23,6 @@
       </div>
     </div>
 </div>
-    <!-- <div class="profile-options">
-      <div class="tabs is-fullwidth">
-        <ul>
-          <li class="link is-active"><a><span class="icon"><i class="fa fa-list"></i></span> <span>My Lists</span></a></li>
-          <li class="link"><a><span class="icon"><i class="fa fa-heart"></i></span> <span>My Likes</span></a></li>
-          <li class="link"><a><span class="icon"><i class="fa fa-th"></i></span> <span>My Posts</span></a></li>
-          <li class="link"><a><span class="icon"><i class="fa fa-bookmark"></i></span> <span>My Bookmarks</span></a></li>
-        </ul>
-      </div>
-    </div> -->
-<style>
-.profile {
-  margin-top:-50px;
-  margin-left:10px;
-  color: #8b8585; 
-}
-.meal{
-    margin-left:-15px;
-}
-.profile-heading .name {
-  margin:-20px 0;
-  padding-top:50px;
-  padding-left: 20px;
-}
-.follow{
-    margin-top: 15px;
-}
-
-.avatar img {
-  border-radius: 200px;
-}
-.stat-val {
-    font-size: 2em;
-    padding-top: 15px;
-    font-weight: bold;
-}
-      
-.stat-key {
-    font-size: 1.2em;
-    font-weight: 200;
-}
-      
-
-</style>
-       
 
 <div class="columns is-desktop">
            
