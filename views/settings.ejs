@@ -9,7 +9,19 @@
                 </div>
             </div>
         </section>
-
+        <div id="result"></div>
+        <script>
+        fetch('/fbcost')
+        .then(function(res){
+            alert(JSON.stringify(res));
+            console.log(res);
+            var result = document.getElementById('result');
+            
+            result.innerHTML = JSON.stringify(res);
+        }).catch(function(err){
+            alert(err);
+        })
+        </script>
 
 
     </div>

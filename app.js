@@ -37,7 +37,6 @@ app.use(cookieSesion({
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
-// app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
 app.use(methodOverride("_method"));
@@ -55,8 +54,8 @@ app.use(session({
 
 app.use(function(req, res, next){
     res.append('Access-Control-Allow-Origin', ['*']);
-    // res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    // res.append('Access-Control-Allow-Headers', 'Content-Type');
+    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.append('Access-Control-Allow-Headers', 'Content-Type');
     res.locals.user = req.user;
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
@@ -224,8 +223,9 @@ if(d.date()<date){
     secondDate =d.format('YYYY, MM, '+ date);
 }
 
-
-let pattern = {$gte:new Date(firstDate), $lte: new Date(secondDate)};
+// let pattern = {$gte:new Date("07-07-2018"), $lte: new Date("08-08-2018")};
+let pattern =  {$gte:new Date(firstDate), $lte: new Date(secondDate)};
+console.log(pattern);
 
 app.post('/cost', adminPass, (req, res)=>{
         let ids=[req.body.id1, req.body.id2];
@@ -384,18 +384,51 @@ app.get("/admin", authCheck, (req, res)=>{
     Devotee.find({})
         .populate({path: 'meals', match: { date: pattern}, select: 'num -_id'})
         .populate({path:"deposits", match: { date: pattern}, select:'amount -_id'})
-        .populate({path:'costs', match: { date: pattern}, select:'amount date market -_id'})
+        .populate({path:'costs', match: { date: pattern}, select:'date market -_id'})
         .exec(function(err, devotee){
-        if(err){ console.log(err);
+            if(err){ console.log(err);
         } else {
-            res.render("admin", {user:req.user, devotee:devotee, month:dMonth});
+            Cost.find({date:pattern}, (err, cost)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    res.render("admin", {user:req.user, devotee:devotee, month:dMonth, cost:cost });
+                }  
+            });               
         }
     });
 });
 
 app.get('/report', authCheck, (req, res)=>{
-    console.log(req.body.date1);
-    res.render('report', {user:req.user, dat:req.body.date1, dat2:req.body.date2});
+    var num = req.query.num;
+    var firD = moment(new Date(firstDate));
+    firD = firD.subtract(num, 'months');
+    var reportMonth = firD.format('MMMM-YY');
+    firD = firD.format('YYYY, MM, '+ date);
+    var seDate = moment(new Date(secondDate));
+    seDate = seDate.subtract(num, 'months');
+    seDate = seDate.format('YYYY, MM, '+ date);
+
+    let newPattern = {$gte:new Date(firD), $lte: new Date(seDate)};
+    // if(req.query.dat1 ==null && req.query.dat2 == null){
+    //     let newPattern =  {$gte:new Date(firstDate), $lte: new Date(secondDate)};
+    // }
+    Devotee.find({})
+        .populate({path: 'meals', match: { date: newPattern}, select: 'num -_id'})
+        .populate({path:"deposits", match: { date: newPattern}, select:'amount -_id'})
+        .populate({path:'costs', match: { date: newPattern}, select:'date market -_id'})
+        .exec(function(err, devotee){
+            if(err){ console.log(err);
+        } else {
+            Cost.find({date:newPattern}, (err, cost)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    res.render("report", {user:req.user, devotee:devotee, month:reportMonth, cost:cost });
+                }  
+            });               
+        }
+    });
 });
 
 app.get('/bugs', authCheck, (req, res)=>{
