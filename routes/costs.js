@@ -1,32 +1,46 @@
 const express = require("express"),
       Cost    = require("../models/cost"),
-      router  = express.Router({mergeParams: true});
+      Devotee = require("../models/devotee"),
+      router  = express.Router({mergeParams: true}),
+      library = require('../library/lib');  
 
-
- //middleware for authCheck
-const authCheck = (req, res, next)=>{
-    if(req.user){
-        next();
-    }else{
-        res.redirect('/login');
-    }
-}
-
-router.get('/', authCheck, (req, res)=>{
-    res.render('cost', {user: req.user});
+router.post('/', library.admin, (req, res)=>{
+        let ids=[req.body.id1, req.body.id2];
+        let data= {
+            date:req.body.date,
+            amount:req.body.amount,
+            market:req.body.market,
+            costType:req.body.costType,
+            persons:ids
+        };
+        var newCost = new Cost(data);
+        newCost.save();
+        Devotee.find({_id:{$in:ids}}, (err, dev)=>{
+            if(err){console.log(err)}
+            for(i in dev){
+                dev[i].costs.push(newCost);
+                dev[i].save();
+            }
+            console.log(dev[1].costs);
+            req.flash("success", "Amount is successfully added");
+            res.redirect('/monthlyCost');
+        });
 });
 
-router.post('/', authCheck, (req, res)=>{
-    new Cost({
-        persons:req.body.persons,
-        date:req.body.date,
-        amount:req.body.amount,
-        market:req.body.market,
-        costType:req.body.costType
-    }).save().then((newCost)=>{
-        console.log('New user registered' + newCost);
-        done(null, newCost);
+
+router.get('/', library.auth, (req, res)=>{ 
+    Cost.find({date:library.pattern}, function(err, docs){
+        if(docs){
+            Devotee.find({}, (err, dev)=>{
+                res.render('monthly', {doc:docs, devotee:dev, month:library.dMonth});
+            });
+        }else{
+            console.log(err);
+            res.redirect('back');
+        }
+        
     });
+    
 });
 
 module.exports = router;

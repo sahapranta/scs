@@ -1,6 +1,4 @@
-// source: https://gist.github.com/Bradcomp/a9ef2ef322a8e8017443b626208999c1
 $('document').ready(function(){
-//menu function toggle 
     var burger = document.querySelector('.burger');
     var menu = document.querySelector('#'+burger.dataset.target);
     burger.addEventListener('click', function() {
@@ -8,7 +6,6 @@ $('document').ready(function(){
         menu.classList.toggle('is-active');
     });
 
-    //modal function
     function toggleModalClasses(event) {
         var modalId = event.currentTarget.dataset.modalId;
         var modal = $(modalId);
@@ -28,40 +25,10 @@ $('document').ready(function(){
         // alert();
         dropdown.toggleClass('.is-open');
     });
-$('.menu-list li').on('hover', function(){
-    $('.menu-list li a').toggleClass('.is-active');
-});
+    $('.menu-list li').on('hover', function(){
+        $('.menu-list li a').toggleClass('.is-active');
+    });
    
-    var localStorageAPI = {
-        isSupported: function() {
-            return window.localStorage;
-        },
-     
-        setItem: function(key, value) {
-            return localStorage.setItem(key, value);
-        },
-     
-        getItem: function(key) {
-            return localStorage.getItem(key);
-        },
-        setObject: function(key, object) {
-            return localStorage.setItem(key, JSON.stringify(object));
-        },
-     
-        getObject: function(key) {
-            return JSON.parse(localStorage.getItem(key));
-        },
-     
-        removeItem: function(key) {
-            return localStorage.removeItem(key);
-        },
-     
-        clearAll: function() {
-            return localStorage.clear();
-        }
-     
-    };
-
         $("#mealSubmit").on('click', function(){
             $('.mealForm').each(function(){
                 var valuesToSend = $(this).serialize();
@@ -99,7 +66,7 @@ $('.menu-list li').on('hover', function(){
                }          
             
            }else{
-               alert("Thanks for not deleting me!");
+               alert("Thanks for not deleting!");
            }
         });
         
@@ -240,7 +207,55 @@ $('.menu-list li').on('hover', function(){
                 alert("Thanks for not deleting me!");
             }
         });
-        
+
+        let element = $('#monthlyChart');
+        let getCanvas;
+        html2canvas(element, {
+            onrendered: function (canvas) {
+                //    element.append(canvas);
+                   return getCanvas = canvas;
+                }
+            });
+        $("#pdf").on('click', function () {
+            
+            let imageData = getCanvas.toDataURL("image/jpg");
+            let newData = imageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
+            $(this).attr("download", 'scsoss.jpg').attr("href", newData);
+       });
+       let numRan;
+             
+       function up(){
+           if(numRan<5){
+                numRan += 1;
+                $('#numRange').text(numRan);
+           } else{
+                snack('Sorry! Maximum value is 5.');
+           } 
+        }
+
+        function down(){
+            if(numRan >1 ){
+               numRan -= 1;
+               window.location.replace(`/report?num=${numRan}`);
+               $('#numRange').text(numRan);
+            }else{
+                snack('Sorry! Minimum value is 1.');
+            }
+        }
+
+        function snack(txt){
+            $('#snackbar').text(txt);
+            $('#snackbar').addClass('show');
+            setTimeout(function(){ $('#snackbar').removeClass('show')}, 3000);
+        }
+
+           $('#next').click(()=>{
+               up();
+           });
+           $('#previous').click(()=>{
+               down();
+           });
+           $('#numRange').text(numRan);
 });
 //side Nav
 function openNav() {
@@ -272,7 +287,7 @@ window.setTimeout(function() {
     var objDoc = objFrame.document;
     var jStyleDiv = $( "<div>" ).append( $( "style" ).clone() );
     objDoc.open();
-    objDoc.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" );
+    objDoc.write( "<!DOCTYPE html>" );
     objDoc.write( "<html>" );
     objDoc.write( $('head').html() );
     objDoc.write( "<body>" );
@@ -291,3 +306,23 @@ window.setTimeout(function() {
     objFrame.print();
     setTimeout(function(){jFrame.remove(); }, (60 * 1000));
 }
+
+if ("serviceWorker" in navigator) {
+  send().catch(err => console.log(err));
+}
+
+async function send() {
+
+  const register = await navigator.serviceWorker.register("/sw.js", {
+    scope: "/"
+  });
+
+  await fetch("/subscribe", {
+    method: "POST",
+    body: JSON.stringify(subscription),
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+}
+

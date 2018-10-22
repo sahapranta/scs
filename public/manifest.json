@@ -1,8 +1,9 @@
 {
     "name": "Sri Chaitanya Shiksha O Sangskriti Sangha",
     "short_name": "SCSOSS, DU",
-    "theme_color": "#a15cd6",
-    "background_color": "#5cd676",
+    "gcm_sender_id": "908907854547",
+    "theme_color": "#a20dcf",
+    "background_color": "#a20dcf",
     "display": "fullscreen",
     "orientation": "portrait",
     "Scope": "/",

@@ -4,6 +4,7 @@
   "description": "Sri Chaitanya Shiksha O Sangskriti Sangha, University of Dhaka",
   "main": "app.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
   "repository": {
@@ -22,9 +23,9 @@
   },
   "homepage": "https://github.com/scsoss/scsoss.github.io#readme",
   "dependencies": {
-    "bulma-extensions": "^1.0.31",
     "connect-flash": "^0.1.1",
     "cookie-session": "^2.0.0-beta.3",
+    "dotenv": "^6.1.0",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "express-sanitizer": "^1.0.3",
@@ -34,6 +35,7 @@
     "mongoose": "5.2.4",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^5.0.0"
+    "passport-local-mongoose": "^5.0.0",
+    "twilio": "^3.23.1"
   }
 }

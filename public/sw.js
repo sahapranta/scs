@@ -25,7 +25,7 @@ var cacheAssets =
     '/manifest.json'
 ];
 
-  self.addEventListener('install', function(event) {
+self.addEventListener('install', function(event) {
     event.waitUntil(
         caches
             .open(cacheName)
@@ -49,10 +49,17 @@ self.addEventListener('activate', e=>{
     )
 });
 
-
+// self.addEventListener("push", e => {
+//     const data = e.data.json();
+//     self.registration.showNotification(data.title, {
+//       body: "Notification from Sri Chaintanya Shiksha O Sangskriti Sangha",
+//       icon: "/media/icons/icon-192x192.png"
+//     });
+// });
     
 self.addEventListener('fetch', e=>{
     e.respondWith(fetch(e.request)
         .catch(()=>caches.match(e.request))
     );
 });
+

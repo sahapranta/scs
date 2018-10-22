@@ -6,7 +6,7 @@
                     <div class="control">
                         <div class="tags has-addons">
                             <a class="tag is-link" href="#">Developed By:</a>
-                            <span class="tag">@Pranta | @Asim &nbsp;<i class="fa fa-github"></i></span>
+                            <span class="tag"> <a href="https://github.com/sahapranta" target="_blank">@Pranta Saha<i class="fa fa-github"></i></a> </span>
                         </div>
                     </div>
                 </div>
@@ -15,27 +15,15 @@
     </div>
 </footer>
 
-
-<!-- <script
+<div id="snackbar">Some text some message..</div>
+<!--  <script
 src="https://code.jquery.com/jquery-3.3.1.min.js"
 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 crossorigin="anonymous"></script> -->
 <script src="/js/jquery.js"></script>
-
+<script src="/js/html2canvas.js"></script>
 <script async type="text/javascript" src="/js/main.js"></script>
 
-<script type="text/javascript">
-    window.addEventListener("load",function(){
-        "serviceWorker"in navigator&&navigator.serviceWorker
-        .register("/sw.js",{scope:"./"})
-        .then(function(e){
-            console.log("Registration succeeded.")
-        })
-        .catch(function(e){
-            console.log("Registration failed with "+e)
-        })
-    });
-</script>
     <!-- modal for report bug -->
     <div aria-hidden="" class="modal is-mobile" id="bug-report">
         <div class="modal-background close-modal"  data-modal-id="#bug-report"></div>

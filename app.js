@@ -11,6 +11,8 @@ const express = require("express"),
      passportLocalMongoose = require("passport-local-mongoose"),
      expressSanitizer = require("express-sanitizer"),
      moment = require("moment"), //moment@2.21.0
+     twilio = require('twilio'),
+
      //schema
      User = require("./models/user"),
      Meal = require("./models/meal"),
@@ -18,14 +20,26 @@ const express = require("express"),
      Deposit = require("./models/deposit"),
      Cost = require("./models/cost"),
      Bug = require("./models/bug"),
-     Settings = require("./models/settings"),
-     
+
+    //  Requiring routers
+     authRoutes = require('./routes/auth'),
+     costRoutes = require('./routes/costs'),
+     devoteeRoutes = require('./routes/devotee'),
+     bugRoutes = require('./routes/bug'),
+     multiRoutes = require('./routes/multi'),
+
+     //  function Library
+     library = require('./library/lib'),
      app = express();
-     var Schema = mongoose.Schema;
-     var ObjectId = Schema.ObjectId;
+     require('dotenv/config');
+
+const mongodbUri = process.env.MONGODB_URI;
+const twilioAcSid = process.env.TWILIO_ACC_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://pranta:scsoss@ds241658.mlab.com:41658/scsoss', ()=>{
+mongoose.connect(mongodbUri, {useNewUrlParser: true}, ()=>{
     console.log('connected to mongodb via mLab');
 });
 //npm install mongoose@4.7.2 (latest version not work properly)!
@@ -37,20 +51,35 @@ app.use(cookieSesion({
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
 app.use(methodOverride("_method"));
 app.use(flash());
 
 app.use(session({
- secret:"asimkumar",
- key: 'sid',
- cookie: { 
-     maxAge: 60000
-     },
- saveUninitialized:false,
- resave:false
+    secret:"asimkumar",
+    key: 'sid',
+    cookie: { 
+                maxAge: 60000
+            },
+    saveUninitialized:false,
+    resave:false
 }));
+ //Passport Configuration
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+ 
+passport.serializeUser((user, done)=>{
+    done(null, user.id);
+});
+ 
+passport.deserializeUser((id,done)=>{
+    User.findById(id).then((user)=>{
+        done(null, user);
+    });
+});
 
 app.use(function(req, res, next){
     res.append('Access-Control-Allow-Origin', ['*']);
@@ -63,272 +92,18 @@ app.use(function(req, res, next){
  });
 
 
- //Passport Configuration
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-passport.use(new LocalStrategy(User.authenticate()));
-
-passport.serializeUser((user, done)=>{
-    done(null, user.id);
-});
-
-passport.deserializeUser((id,done)=>{
-    User.findById(id).then((user)=>{
-        done(null, user);
-    });
-});
-
-
-//middleware for authCheck
-const authCheck = (req, res, next)=>{
-    if(req.user){
-        next();
-    }else{
-        req.flash('error', 'Your not Logged in');
-        res.redirect('/login');
-    }
-}
-
-const adminPass = (req, res, next)=>{
-    if(req.user.isAdmin == true){
-        req.flash('success', 'You have Admin Access, Be careful! ');
-        next();
-    }else{
-        req.flash('error', 'Sorry, You are not admin.');
-        res.redirect('/');
-    }
-}
-
-///restful routing
+//restful routing
 app.get("/", (req, res)=>{
     res.render("index", {user: req.user}); 
 });
 
-//Auth Routes .........
-app.get("/register", (req, res)=>{
-    res.render("auth/register", {user: req.user});
-});
+app.use(authRoutes);
+app.use('/cost', costRoutes);
+app.use('/devotee', devoteeRoutes);
+app.use('/bug', bugRoutes);
+app.use(multiRoutes);
 
-app.post("/register", (req, res)=>{
-   var username = req.body.username;
-   var password = req.body.password;
-   var isAdmin  = req.body.isAdmin;
-   var isAdmin = JSON.parse(isAdmin.toLowerCase());
- 
-   User.register(new User({username:username, isAdmin:isAdmin}), password, (err, user)=>{
-       if(err){
-           req.flash('error', 'Something Went Wrong, Please Try Again.');
-           console.log("err");
-           res.redirect("/register");
-       }
-       passport.authenticate("local")(req, res, function(){
-          req.flash('success', 'Registration Successful');
-          res.redirect("/admin"); 
-          console.log(user);
-       });
-   });
-});
-
-
-app.get("/login", (req, res)=>{
-    res.render("auth/login" , {user: req.user}); 
- });
-
-//login logic (middleware)
-app.post("/login", passport.authenticate("local", {
-    // successRedirect: "/admin",
-        failureRedirect: "/login",
-        failureFlash: true
-    }), (req, res)=>{
-            req.flash('success', 'You have successfully logged in');
-            res.redirect('/admin');
-            console.log('login');
-});
-
-
-app.get('/logout', (req, res)=>{
-    req.logout();
-    req.flash("error", "Logged you out!");
-    res.redirect('/');
-});
-
-//authChecked Routing
-app.get("/user", authCheck, (req, res)=>{
-    User.find({}, (err, allUser)=>{
-        if(err){
-            console.log('error in finding user' + err);
-        }else{
-            res.render("user", {user: req.user, users:allUser}); 
-        }
-    });
-});
-app.delete("/user/delete/:id", adminPass, (req, res)=>{
-    User.findByIdAndRemove(req.params.id, (err)=>{
-        if(err){
-            req.flash("error", "Something Went Wrong, Please try again");
-            res.redirect("back");
-        } else {
-            req.flash("success", "Successfully Deleted");
-            res.redirect("back");
-        }
-    });
-});
-
-app.put("/user/admin/:id", adminPass, (req, res)=>{
-    User.findById(req.params.id, (err, user)=>{
-        if(err){
-            req.flash("error", "Something Went Wrong. Please Try Again!");
-            res.redirect("back");
-        } else {
-            if(user.isAdmin === true){
-                user.isAdmin=false;
-            }else{
-                user.isAdmin =true;
-            }
-            user.save();
-            res.redirect("back");
-        }
-    });
-});
-
-app.post("/user/edit/:id", authCheck, (req, res)=>{
-    User.findById(req.params.id, (err, user)=>{
-        if(req.body.eUsername){
-            user.username = req.body.eUsername;
-        }
-        user.setPassword(req.body.ePassword, (err)=>{
-            if(err){console.log(err);}
-        });
-        user.save();
-        req.flash('New Password updated');
-        res.redirect('back');
-    });
-});
-
-var d = moment();
-var date = 8;
-var firstDate, secondDate, dMonth;
-if(d.date()<date){
-    d.subtract(1, 'months');
-    firstDate =d.format('YYYY, MM, '+ date);
-    dMonth= d.format('MMMM, YYYY');
-    d.add(1, 'months');
-    secondDate =d.format('YYYY, MM, '+ date);
-}else{
-    firstDate =d.format('YYYY, MM, '+ date);
-    dMonth= d.format('MMMM, YYYY');
-    d.add(1, 'months');
-    secondDate =d.format('YYYY, MM, '+ date);
-}
-
-// let pattern = {$gte:new Date("07-07-2018"), $lte: new Date("08-08-2018")};
-let pattern =  {$gte:new Date(firstDate), $lte: new Date(secondDate)};
-console.log(pattern);
-
-app.post('/cost', adminPass, (req, res)=>{
-        let ids=[req.body.id1, req.body.id2];
-        let data= {
-            date:req.body.date,
-            amount:req.body.amount,
-            market:req.body.market,
-            costType:req.body.costType,
-            persons:ids
-        };
-        var newCost = new Cost(data);
-        newCost.save();
-        Devotee.find({_id:{$in:ids}}, (err, dev)=>{
-            if(err){console.log(err)}
-            for(i in dev){
-                dev[i].costs.push(newCost);
-                dev[i].save();
-            }
-            console.log(dev[1].costs);
-            req.flash("success", "Amount is successfully added");
-            res.redirect('/monthlyCost');
-        });
-});
-
-
-app.get('/monthlyCost', authCheck, (req, res)=>{ 
-    Cost.find({date:pattern}, function(err, docs){
-        if(docs){
-            Devotee.find({}, (err, dev)=>{
-                res.render('monthly', {user: req.user, doc:docs, devotee:dev, month:dMonth});
-            });
-        }else{
-            console.log(err);
-            res.redirect('back');
-        }
-        
-    });
-    
-});
-
-app.get("/devotee", authCheck, (req, res)=>{
-    Devotee.find({}, (err, devotee)=>{
-        if(err){
-            console.log(err);
-            req.flash('error', "Sorry! Something Went Wrong!");
-            res.redirect('back');
-        }else{
-            res.render("devotee/devotee", {user:req.user, devotee:devotee});
-        }
-    });
-});
-
-app.put("/devotee/edit/:id", adminPass, (req, res)=>{
-    var newEdit = {name:req.body.editName, mobile:req.body.editMobile};
-    Devotee.findByIdAndUpdate(req.params.id, newEdit, (err, update)=>{
-        if(err){
-            req.flash("error", "Something Went Wrong. Please Try Again!");
-            res.redirect("back");
-        } else {
-            req.flash("success", `Successfully Updated ${update.name}.`);
-            res.redirect("back");
-        }
-    });
-});
-
-app.delete("/devotee/delete/:id", (req, res)=>{
-    Devotee.findByIdAndRemove(req.params.id, (err)=>{
-        if(err){
-            req.flash("error", "Something Went Wrong, Please try again");
-            res.redirect("back");
-        } else {
-            req.flash("success", "Successfully Deleted");
-            res.redirect("back");
-        }
-    })
-})
-
-app.get("/devotee/:id", authCheck, (req, res)=>{
-    var id = req.params.id;
-    Devotee.findById(id)
-        .populate({path: 'meals', match: { date: pattern}, select: 'num date id'})
-        .populate({path:'deposits', match: { date: pattern}, select:'amount date id'})
-        .populate({path:'costs', match: { date: pattern}, select:'amount date id market'})
-        .exec(function(err, devotee){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("devotee/show", {user:req.user, devotee:devotee, month:dMonth});
-        }
-    });
-});
-
-app.post("/addDevotee", adminPass, (req, res)=>{
-    new Devotee({
-        name: req.body.name,
-        mobile: req.body.mobile
-    }).save().then((newDevotee)=>{
-            req.flash("success", `${req.body.name} is successfully added"`);
-            res.redirect("/devotee");
-       });
-});
-
-app.post("/deposit/:id", adminPass, (req, res)=>{
+app.post("/deposit/:id", library.admin, (req, res)=>{
     Devotee.findById(req.params.id, (err, devotee)=>{
         var newDeposit = {amount:req.body.depositAmount, date:req.body.depositDate};
         if(err){
@@ -348,7 +123,7 @@ app.post("/deposit/:id", adminPass, (req, res)=>{
     });
 });
 
-app.get("/meal", authCheck, (req, res)=>{
+app.get("/meal", library.auth, (req, res)=>{
     Devotee.find({}, (err, devotee)=>{
         if(err){
             console.log(err);
@@ -360,7 +135,7 @@ app.get("/meal", authCheck, (req, res)=>{
     });
 });
 
-app.post("/meal", adminPass, (req, res)=>{
+app.post("/meal", library.admin, (req, res)=>{
     Devotee.findById(req.body.id, (err, devotee)=>{
         var newMeal = {num:req.body.meal, date:req.body.date};
         if(err){
@@ -380,36 +155,39 @@ app.post("/meal", adminPass, (req, res)=>{
     });
 });
 
-app.get("/admin", authCheck, (req, res)=>{
+app.get("/admin", library.auth, (req, res)=>{
     Devotee.find({})
-        .populate({path: 'meals', match: { date: pattern}, select: 'num -_id'})
-        .populate({path:"deposits", match: { date: pattern}, select:'amount -_id'})
-        .populate({path:'costs', match: { date: pattern}, select:'date market -_id'})
+        .populate({path: 'meals', match: { date: library.pattern}, select: 'num -_id'})
+        .populate({path:"deposits", match: { date: library.pattern}, select:'amount -_id'})
+        .populate({path:'costs', match: { date: library.pattern}, select:'date market -_id'})
         .exec(function(err, devotee){
             if(err){ console.log(err);
         } else {
-            Cost.find({date:pattern}, (err, cost)=>{
+            Cost.find({date:library.pattern}, (err, cost)=>{
                 if(err){
                     console.log(err);
                 }else{
-                    res.render("admin", {user:req.user, devotee:devotee, month:dMonth, cost:cost });
+                    res.render("admin", {user:req.user, devotee:devotee, month:library.dMonth, cost:cost });
                 }  
             });               
         }
     });
 });
 
-app.get('/report', authCheck, (req, res)=>{
-    var num = req.query.num;
-    var firD = moment(new Date(firstDate));
+app.get('/report', library.auth, (req, res)=>{
+    let num = 2;
+    let firD = moment(new Date(library.firstDate));
     firD = firD.subtract(num, 'months');
-    var reportMonth = firD.format('MMMM-YY');
-    firD = firD.format('YYYY, MM, '+ date);
-    var seDate = moment(new Date(secondDate));
+    let reportMonth = firD.format('MMMM-YY');
+    firD = firD.format('YYYY, MM, '+ library.date);
+    let seDate = moment(new Date(library.secondDate));
     seDate = seDate.subtract(num, 'months');
-    seDate = seDate.format('YYYY, MM, '+ date);
+    seDate = seDate.format('YYYY, MM, '+ library.date);
 
     let newPattern = {$gte:new Date(firD), $lte: new Date(seDate)};
+    // console.log(firD);
+    // console.log(typeof(library.firstDate));
+
     // if(req.query.dat1 ==null && req.query.dat2 == null){
     //     let newPattern =  {$gte:new Date(firstDate), $lte: new Date(secondDate)};
     // }
@@ -431,49 +209,25 @@ app.get('/report', authCheck, (req, res)=>{
     });
 });
 
-app.get('/bugs', authCheck, (req, res)=>{
-    Bug.find({}).exec( (err, bugs)=>{
-        res.render('bug', {user:req.user, bug:bugs});
-    });
+
+app.get('/twilio', (req, res)=>{
+    let mess = req.query.sms;
+    var client = new twilio(twilioAcSid, authToken);
+    
+    client.notify.services(notifyServiceId)
+    .notifications.create({
+        toBinding: JSON.stringify({
+            binding_type:'sms', address:'+8801924565272',
+            // binding_type:'sms', address:'+8801924565272',
+            // binding_type:'sms', address:'+8801924565272'
+        }),
+        body: `Account of ${library.dMonth}. Meal Charge: 30tk, and you have to pay 500tk more. Hare Krishna.`
+    })
+    .then(notification => console.log(notification.sid))
+    .catch(error => console.log(error));
 });
 
-app.post("/bug", authCheck, (req, res)=>{
-    new Bug({
-        user:req.user.username,
-        name:req.body.name,
-        desc:req.body.desc
-    }).save().then((newBug)=>{
-        req.flash('success', "Your bug has been recorded, Thanks");
-        res.redirect('back');
-    });
-});
 
-app.delete('/bug/delete/:id', adminPass, (req, res)=>{
-    Bug.findByIdAndRemove(req.params.id, (err)=>{
-        if(err){console.log(err);}
-        req.flash('Bug Deleted');
-        res.redirect('back');
-    });
-});
-
-app.get('/analysis', authCheck, (req, res)=>{
-    res.render('analysis', {user:req.user});
-});
-
-app.get('/settings', authCheck, (req, res)=>{
-    res.render('settings', {user:req.user});
-});
-
-app.get('/Prabhupada', (req, res)=>{
-    res.render('sp', {user:req.user});
-});
-app.get('/info', (req, res)=>{
-    res.render('info', {user:req.user});
-});
-
-app.get("/nodata", (req, res)=>{
-    res.render("nodata");
-});
 
 //error 404 setup
 app.get("*", (req, res)=>{
