@@ -1,134 +1,194 @@
-<% include ../partials/header %>
+<%include ../partials/_head%>
 <% var meal=[], deposit=[]; for(let f of devotee.deposits){deposit.push(f.amount);} for(let x of devotee.meals){meal.push(x.num);} function sum(num){return num.reduce((a,b)=>{return a+b;}, 0);} %>
-<div class="container">
-        <div class="column is-12" id="main">
-            <section class="hero is-info welcome is-small">
-                <div class="hero-body">
-                    <div class="container">
-                        <h1 class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span><%= devotee.name %></h1>
+<div class="container-scroller">
+          <% include ../partials/navbar%>
+    <div class="container-fluid page-body-wrapper">
+          <% include ../partials/_sidebar%>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">                        
+                            <section class="col-lg-4 grid-margin stretch-card bg-faded">
+                                    <div class="flex-items-sm-center">
+                                        <div class="card profile-card">
+                                            <figure>
+                                                <input id="fab" type="checkbox" class="fab"><label for="fab" class="toggle">+</label>
+                                                <img src="/vendors/images/faces/bikash.jpg" class="img-fluid img-profile" alt="Card image">
+                                            </figure>
+                                            <div class="card-block text-center">
+                                                <h1 class="font-weight-bold"><%= devotee.name %></h1>
+                                                <h4 class="card-subtitle"><%= devotee.mobile %></h4><br/>
+                                                <div class="row">
+                                                    <div class="col-4 text-center">
+                                                        <h2><strong><%= sum(meal); %> </strong></h2>                    
+                                                        <p><small>Meal</small></p>
+                                                    </div>
+                                                    <div class="col-4 text-center">
+                                                        <h2><strong><%= sum(deposit); %></strong></h2>                    
+                                                        <p><small>Deposit</small></p>  
+                                                    </div>
+                                                    <div class="col-4 text-center">
+                                                        <h2><strong>400</strong></h2>                    
+                                                        <p><small>Balance</small></p>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                           </div>
+                        </section>
+                    <div class="col-lg-8 grid-margin stretch-card">
+                        <div class="card boxshadow">
+                        <div class="card-body">
+                            <h4 class="bg-light p-3 border border-info">Deposit</h4>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>নং</td>
+                                            <td>তারিখ</td>
+                                            <td>পরিমাণ</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                <% for(let [d, i] of devotee.deposits.entries()){ %>
+                                        <tr>
+                                            <td><%= d+1 %></td>
+                                            <td><%= i.date.toLocaleDateString() %></td>
+                                            <td><%= i.amount %></td>
+                                        </tr>
+                                <% } %>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <h4 class="bg-light p-3 border border-danger">বাজার</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-bordered">
+                                        <thead>
+                                           <tr>
+                                                <td>নং</td>
+                                                <td>তারিখ</td>
+                                                <td>খরচ</td>
+                                                <td>বাজার</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <% for(let [o, p] of devotee.costs.entries()){ %>
+                                                    <tr>
+                                                        <td><%= o+1 %></td>
+                                                        <td><%= p.date.toLocaleDateString() %></td>
+                                                        <td><%= p.amount %></td>
+                                                        <td><%= p.market %></td>
+                                                    </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <hr>
+                                <div class="d-block">
+                                        <h4 class="bg-light p-3 border border-success">মিলের হিসাব</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped table-bordered">
+                                                <thead>
+                                                        <tr>
+                                                                <td>নং</td>
+                                                                <td>তারিখ</td>
+                                                                <td>মিল</td>
+                                                            </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <% var meal = devotee.meals; for(let [l, x] of meal.entries()){ %>
+                                                            <tr>
+                                                                <td><%= l+1 %></td>
+                                                                <td><%= x.date.toLocaleDateString() %></td>
+                                                                <td><%= x.num %></td>
+                                                            </tr>
+                                                        <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                </div>
-            </section>
-        
-        <div class="profile">
-
-    <div class="section profile-heading">
-      <div class="columns  is-mobile is-multiline">
-           <div class='column is-2-tablet is-4-mobile meal has-text-centered'>
-            <p class='stat-val'><%= sum(meal); %></p>
-            <p class='stat-key'>Meal</p>
-          </div>
-          <div class='column is-2-tablet is-4-mobile has-text-centered'>
-            <p class='stat-val'><%= sum(deposit); %></p>
-            <p class='stat-key'>Balance</p>
-          </div>
-          <div class='column is-2-tablet is-4-mobile has-text-centered'>
-            <p class='stat-val'>300</p>
-            <p class='stat-key'>Adjustment</p>
-          </div>
-      </div>
-    </div>
-</div>
-
-<div class="columns is-desktop">
-           
-    <div class="column is-5">
-        <div class="card events-card">
-            <header class="card-header">
-                <p class="card-header-title">জমার পরিমাণ</p>
-                <a href="#" class="card-header-icon" aria-label="more options">
-                    <span class="icon">
-                      <i class="fa fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                </a>
-            </header>
-            <div class="card-table">
-                <div class="content">
-                    <table class="table is-fullwidth is-striped">
-                        <tbody class="has-text-centered">
-                            <tr>
-                                <td>নং</td>
-                                <td>তারিখ</td>
-                                <td>পরিমাণ</td>
-                            </tr>
-                    <% for(let [d, i] of devotee.deposits.entries()){ %>
-                            <tr>
-                                <td><%= d+1 %></td>
-                                <td><%= i.date.toLocaleDateString() %></td>
-                                <td><%= i.amount %></td>
-                            </tr>
-                     <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="card events-card">
-            <header class="card-header">
-                <p class="card-header-title">বাজার</p>
-                <a href="#" class="card-header-icon" aria-label="more options">
-                    <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
-                </a>
-            </header>
-            <div class="card-table">
-                <div class="content">
-                    <table class="table is-fullwidth is-striped">
-                        <tbody class="has-text-centered">
-                            <tr>
-                                <td>নং</td>
-                                <td>তারিখ</td>
-                                <td>খরচ</td>
-                                <td>বাজার</td>
-                            </tr>
-                    <% for(let [o, p] of devotee.costs.entries()){ %>
-                            <tr>
-                                <td><%= o+1 %></td>
-                                <td><%= p.date.toLocaleDateString() %></td>
-                                <td><%= p.amount %></td>
-                                <td><%= p.market %></td>
-                            </tr>
-                    <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end of column is-4 -->
-    <!-- <div class="column is-1"></div> -->
-
-    <div class="column is-6">
-        <div class="card events-card">
-            <header class="card-header">
-                <p class="card-header-title">মিলের হিসাব</p>
-                <a href="#" class="card-header-icon" aria-label="more options">
-                    <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
-                </a>
-            </header>
-            <div class="card-table">
-                <div class="content">
-                    <table class="table is-fullwidth is-striped">
-                        <tbody class="has-text-centered">
-                            <tr>
-                                <td>নং</td>
-                                <td>তারিখ</td>
-                                <td>মিল</td>
-                            </tr>
-                            <% var meal = devotee.meals; for(let [l, x] of meal.entries()){ %>
+                    <!-- <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Hoverable Table</h4>
+                            <p class="card-description">
+                            Add class
+                            <code>.table-hover</code>
+                            </p>
+                            <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
                                 <tr>
-                                    <td><%= l+1 %></td>
-                                    <td><%= x.date.toLocaleDateString() %></td>
-                                    <td><%= x.num %></td>
+                                    <th>User</th>
+                                    <th>Product</th>
+                                    <th>Sale</th>
+                                    <th>Status</th>
                                 </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Jacob</td>
+                                    <td>Photoshop</td>
+                                    <td class="text-danger"> 28.76%
+                                    <i class="mdi mdi-arrow-down"></i>
+                                    </td>
+                                    <td>
+                                    <label class="badge badge-danger">Pending</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Messsy</td>
+                                    <td>Flash</td>
+                                    <td class="text-danger"> 21.06%
+                                    <i class="mdi mdi-arrow-down"></i>
+                                    </td>
+                                    <td>
+                                    <label class="badge badge-warning">In progress</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>John</td>
+                                    <td>Premier</td>
+                                    <td class="text-danger"> 35.00%
+                                    <i class="mdi mdi-arrow-down"></i>
+                                    </td>
+                                    <td>
+                                    <label class="badge badge-info">Fixed</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Peter</td>
+                                    <td>After effects</td>
+                                    <td class="text-success"> 82.00%
+                                    <i class="mdi mdi-arrow-up"></i>
+                                    </td>
+                                    <td>
+                                    <label class="badge badge-success">Completed</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dave</td>
+                                    <td>53275535</td>
+                                    <td class="text-success"> 98.05%
+                                    <i class="mdi mdi-arrow-up"></i>
+                                    </td>
+                                    <td>
+                                    <label class="badge badge-warning">In progress</label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        </div>
+                    </div> -->
                 </div>
             </div>
+        <%include ../partials/_footer%>
         </div>
     </div>
 </div>
-
-    </div>
-</div>
-<% include ../partials/footer %>
+<% include ../partials/_end%>

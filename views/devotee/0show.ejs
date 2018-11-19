@@ -1,0 +1,134 @@
+<% include ../partials/header %>
+<% var meal=[], deposit=[]; for(let f of devotee.deposits){deposit.push(f.amount);} for(let x of devotee.meals){meal.push(x.num);} function sum(num){return num.reduce((a,b)=>{return a+b;}, 0);} %>
+<div class="container">
+        <div class="column is-12" id="main">
+            <section class="hero is-info welcome is-small">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title"><span style="cursor:pointer" onclick="openNav()">&#9776;</span><%= devotee.name %></h1>
+                    </div>
+                </div>
+            </section>
+        
+        <div class="profile">
+
+    <div class="section profile-heading">
+      <div class="columns  is-mobile is-multiline">
+           <div class='column is-2-tablet is-4-mobile meal has-text-centered'>
+            <p class='stat-val'><%= sum(meal); %></p>
+            <p class='stat-key'>Meal</p>
+          </div>
+          <div class='column is-2-tablet is-4-mobile has-text-centered'>
+            <p class='stat-val'><%= sum(deposit); %></p>
+            <p class='stat-key'>Balance</p>
+          </div>
+          <div class='column is-2-tablet is-4-mobile has-text-centered'>
+            <p class='stat-val'>300</p>
+            <p class='stat-key'>Adjustment</p>
+          </div>
+      </div>
+    </div>
+</div>
+
+<div class="columns is-desktop">
+           
+    <div class="column is-5">
+        <div class="card events-card">
+            <header class="card-header">
+                <p class="card-header-title">জমার পরিমাণ</p>
+                <a href="#" class="card-header-icon" aria-label="more options">
+                    <span class="icon">
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </a>
+            </header>
+            <div class="card-table">
+                <div class="content">
+                    <table class="table is-fullwidth is-striped">
+                        <tbody class="has-text-centered">
+                            <tr>
+                                <td>নং</td>
+                                <td>তারিখ</td>
+                                <td>পরিমাণ</td>
+                            </tr>
+                    <% for(let [d, i] of devotee.deposits.entries()){ %>
+                            <tr>
+                                <td><%= d+1 %></td>
+                                <td><%= i.date.toLocaleDateString() %></td>
+                                <td><%= i.amount %></td>
+                            </tr>
+                     <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card events-card">
+            <header class="card-header">
+                <p class="card-header-title">বাজার</p>
+                <a href="#" class="card-header-icon" aria-label="more options">
+                    <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                </a>
+            </header>
+            <div class="card-table">
+                <div class="content">
+                    <table class="table is-fullwidth is-striped">
+                        <tbody class="has-text-centered">
+                            <tr>
+                                <td>নং</td>
+                                <td>তারিখ</td>
+                                <td>খরচ</td>
+                                <td>বাজার</td>
+                            </tr>
+                    <% for(let [o, p] of devotee.costs.entries()){ %>
+                            <tr>
+                                <td><%= o+1 %></td>
+                                <td><%= p.date.toLocaleDateString() %></td>
+                                <td><%= p.amount %></td>
+                                <td><%= p.market %></td>
+                            </tr>
+                    <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of column is-4 -->
+    <!-- <div class="column is-1"></div> -->
+
+    <div class="column is-6">
+        <div class="card events-card">
+            <header class="card-header">
+                <p class="card-header-title">মিলের হিসাব</p>
+                <a href="#" class="card-header-icon" aria-label="more options">
+                    <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                </a>
+            </header>
+            <div class="card-table">
+                <div class="content">
+                    <table class="table is-fullwidth is-striped">
+                        <tbody class="has-text-centered">
+                            <tr>
+                                <td>নং</td>
+                                <td>তারিখ</td>
+                                <td>মিল</td>
+                            </tr>
+                            <% var meal = devotee.meals; for(let [l, x] of meal.entries()){ %>
+                                <tr>
+                                    <td><%= l+1 %></td>
+                                    <td><%= x.date.toLocaleDateString() %></td>
+                                    <td><%= x.num %></td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+<% include ../partials/footer %>

@@ -1,4 +1,6 @@
 <% include partials/header %>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 <div class="container load">
     <div class="column is-12" id="main">
     
@@ -9,21 +11,267 @@
                 </div>
             </div>
         </section>
-        <div id="result"></div>
-        <script>
-        fetch('/fbcost')
-        .then(function(res){
-            alert(JSON.stringify(res));
-            console.log(res);
-            var result = document.getElementById('result');
-            
-            result.innerHTML = JSON.stringify(res);
-        }).catch(function(err){
-            alert(err);
-        })
-        </script>
+       
 
+<table id="example" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+                <th>Extn.</th>
+                <th>E-mail</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tiger</td>
+                <td>Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+                <td>5421</td>
+                <td>t.nixon@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Garrett</td>
+                <td>Winters</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>63</td>
+                <td>2011/07/25</td>
+                <td>$170,750</td>
+                <td>8422</td>
+                <td>g.winters@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Ashton</td>
+                <td>Cox</td>
+                <td>Junior Technical Author</td>
+                <td>San Francisco</td>
+                <td>66</td>
+                <td>2009/01/12</td>
+                <td>$86,000</td>
+                <td>1562</td>
+                <td>a.cox@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Cedric</td>
+                <td>Kelly</td>
+                <td>Senior Javascript Developer</td>
+                <td>Edinburgh</td>
+                <td>22</td>
+                <td>2012/03/29</td>
+                <td>$433,060</td>
+                <td>6224</td>
+                <td>c.kelly@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Airi</td>
+                <td>Satou</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>33</td>
+                <td>2008/11/28</td>
+                <td>$162,700</td>
+                <td>5407</td>
+                <td>a.satou@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Brielle</td>
+                <td>Williamson</td>
+                <td>Integration Specialist</td>
+                <td>New York</td>
+                <td>61</td>
+                <td>2012/12/02</td>
+                <td>$372,000</td>
+                <td>4804</td>
+                <td>b.williamson@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Herrod</td>
+                <td>Chandler</td>
+                <td>Sales Assistant</td>
+                <td>San Francisco</td>
+                <td>59</td>
+                <td>2012/08/06</td>
+                <td>$137,500</td>
+                <td>9608</td>
+                <td>h.chandler@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Rhona</td>
+                <td>Davidson</td>
+                <td>Integration Specialist</td>
+                <td>Tokyo</td>
+                <td>55</td>
+                <td>2010/10/14</td>
+                <td>$327,900</td>
+                <td>6200</td>
+                <td>r.davidson@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Colleen</td>
+                <td>Hurst</td>
+                <td>Javascript Developer</td>
+                <td>San Francisco</td>
+                <td>39</td>
+                <td>2009/09/15</td>
+                <td>$205,500</td>
+                <td>2360</td>
+                <td>c.hurst@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Sonya</td>
+                <td>Frost</td>
+                <td>Software Engineer</td>
+                <td>Edinburgh</td>
+                <td>23</td>
+                <td>2008/12/13</td>
+                <td>$103,600</td>
+                <td>1667</td>
+                <td>s.frost@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Jena</td>
+                <td>Gaines</td>
+                <td>Office Manager</td>
+                <td>London</td>
+                <td>30</td>
+                <td>2008/12/19</td>
+                <td>$90,560</td>
+                <td>3814</td>
+                <td>j.gaines@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Quinn</td>
+                <td>Flynn</td>
+                <td>Support Lead</td>
+                <td>Edinburgh</td>
+                <td>22</td>
+                <td>2013/03/03</td>
+                <td>$342,000</td>
+                <td>9497</td>
+                <td>q.flynn@datatables.net</td>
+            </tr>
+            <tr>
+                <td>Charde</td>
+                <td>Marshall</td>
+                <td>Regional Director</td>
+                <td>San Francisco</td>
+                <td>36</td>
+                <td>2008/10/16</td>
+                <td>$470,600</td>
+                <td>6741</td>
+                <td>c.marshall@datatables.net</td>
+            </tr>
+            
+            <tr>
+                <td>Donna</td>
+                <td>Snider</td>
+                <td>Customer Support</td>
+                <td>New York</td>
+                <td>27</td>
+                <td>2011/01/25</td>
+                <td>$112,000</td>
+                <td>4226</td>
+                <td>d.snider@datatables.net</td>
+            </tr>
+        </tbody>
+    </table>
 
     </div>
 </div>
-<% include partials/footer %>
+
+<footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <div class="columns is-mobile is-centered">
+                    <div class="field">
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <a class="tag is-link" href="#">Developed By:</a>
+                                <span class="tag"> <a href="https://github.com/sahapranta" target="_blank">@Pranta Saha<i class="fa fa-github"></i></a> </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <div id="snackbar">Some text some message..</div>
+    <!--  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+	<script>
+		$.extend( $.fn.dataTable.defaults, {
+    responsive: true
+} );
+ 
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+	</script>
+    <script src="/js/html2canvas.js"></script>
+    
+    <script async type="text/javascript" src="/js/main.js"></script>
+    
+        <!-- modal for report bug -->
+        <div aria-hidden="" class="modal is-mobile" id="bug-report">
+            <div class="modal-background close-modal"  data-modal-id="#bug-report"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                  <p class="modal-card-title">Report any problem!</p>
+                  <button aria-label="close" class="delete close-modal" data-modal-id="#bug-report"></button>
+              </header>
+              <section class="modal-card-body">
+                <form action="/bug" method="POST">
+                    <div class="field">
+                        <div class="control has-icons-left">
+                            <span class="icon is-small is-left">
+                                <i class="fa fa-bug" aria-hidden="true"></i>
+                            </span>
+                            <input class="input is-info" type="text" placeholder="Your Name" name="name">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                          <textarea class="textarea is-info" type="text" name="desc" placeholder="Please Give the problem details here"></textarea>
+                        </div>
+                    </div>
+        
+                    <div class="field is-grouped is-grouped-centered">
+                        <div class="control">
+                            <button class="button is-success" type="submit">
+                                <span class="icon is-small">
+                                <i class="fa fa-check"></i>
+                                </span>
+                                <span>Send</span>
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-danger is-outlined" type="reset">
+                                <span>Reset</span>
+                                <span class="icon is-small">
+                                <i class="fa fa-times"></i>
+                                </span>
+                            </button>
+                        </div>
+                      </div>
+                </form>
+              </section>
+            </div>
+        </div>
+    </body>
+    </html>
